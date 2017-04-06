@@ -115,7 +115,11 @@ class ItemController extends Controller
     * @return array
     */
     public function search($key){
-        $items = Item::where('make','like',"%$key%")->orWhere('name','like',"%$key%")->pluck('name','id')->all();
-        return json_encode($items);
+        $result = array();
+        $items = Item::where('make','like',"%$key%")->orWhere('name','like',"%$key%")->get();
+        foreach ($items as $item){
+            $result[$item->id] = $item->make.' '.$item->name;
+        }
+        return json_encode($result);
     }
 }

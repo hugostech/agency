@@ -107,6 +107,15 @@ class OrderController extends Controller
      */
     public function destroy(order $order)
     {
-        //
+//        dd(1);
+        DB::beginTransaction();
+        $order->status='n';
+        foreach ($order->items as $item){
+            $item->pivot->status='s';
+            $item->pivot->save();
+        }
+        $order->save();
+        DB::commit();
+        return redirect()->back();
     }
 }

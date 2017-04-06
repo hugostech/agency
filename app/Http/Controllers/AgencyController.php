@@ -66,7 +66,7 @@ class AgencyController extends Controller
     public function show(Agency $agency)
     {
 
-        $orders = $agency->orders;
+        $orders = $agency->orders()->where('status','y')->orderBy('created_at','desc')->get();
 
         return view('agency.agency_detail',compact('orders','agency'));
     }
