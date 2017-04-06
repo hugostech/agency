@@ -52,8 +52,7 @@ class OrderController extends Controller
         $quantitys = $request->input('quantity');
         $prices = $request->input('price');
         foreach ($ids as $key=>$id){
-            var_dump($id);
-//            $order->items()->attach($id,['quantity'=>$quantitys[$key],'price'=>$prices[$key],'status'=>'p']);
+
 
             $order->items()->attach($id,['quantity'=>$quantitys[$key],'price'=>$prices[$key],'status'=>'p']);
             $total = $total+$quantitys[$key]*$prices[$key];

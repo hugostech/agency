@@ -16,6 +16,8 @@ class CreatePurchaseOrdersTable extends Migration
         Schema::create('purchase_orders', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
+            $table->integer('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('supplier');
             $table->float('total')->default(0);
             $table->float('ship_fee')->default(0);

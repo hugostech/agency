@@ -18,3 +18,13 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+Route::resource('agencys', 'AgencyController');
+Route::resource('items', 'ItemController');
+Route::get('api/items/{search}','ItemController@search');
+
+Route::resource('orders', 'OrderController');
+Route::post('purchase_orders/newpurchase2','PurchaseOrderController@newOrder2');
+Route::get('purchase_orders/review','PurchaseOrderController@purchaseReview');
+Route::resource('purchase_orders', 'PurchaseOrderController');
+
+
