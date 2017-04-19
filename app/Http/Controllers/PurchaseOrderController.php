@@ -4,10 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Purchase_order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
 class PurchaseOrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,7 +43,35 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request,[
+            'items'=>'required',
+            'supplier'=>'required',
+            'supplier_order'=>'required'
+        ]);
+        DB::beginTransaction();
+        $purchase_order = Purchase_order::create($request->all());
+        $items = $request->input('items');
+        $items = json_decode($items,true);
+        $total = 0;
+
+        if($request->has('status')){
+            foreach ($items as $key=>$value){
+
+                $purchase_order->items()->attach($key,['quantity'=>$value[0],'price'=>$value[1],'status'=>'a']);
+                $total += $value[0]*$value[1];
+            }
+        }else{
+            foreach ($items as $key=>$value){
+                $purchase_order->items()->attach($key,['quantity'=>$value[0],'price'=>$value[1]]);
+                $total += $value[0]*$value[1];
+            }
+        }
+        $purchase_order->total = $total;
+        $purchase_order->save();
+        DB::commit();
+        return redirect('purchase_orders');
+
+
     }
 
     /**
@@ -82,7 +116,7 @@ class PurchaseOrderController extends Controller
      */
     public function destroy(Purchase_order $purchase_order)
     {
-        //
+
     }
 
     /*
@@ -116,13 +150,15 @@ class PurchaseOrderController extends Controller
     public function purchaseReview(){
         if(Input::has('s')){
             if (session(Input::get('s'))){
+                $suppliers = Purchase_order::select('supplier')->groupBy('supplier')->pluck('supplier','supplier')->all();
                 $data = session(Input::get('s'));
-                $data = json_decode($data);
+                $data = json_decode($data,true);
+                return view('purchase.purchase_review',compact('data','suppliers'));
             }else{
                 return redirect('purchase_orders');
             }
         }else{
-
+            return redirect('purchase_orders');
         }
     }
 }

@@ -59,6 +59,7 @@
                 content = content+'<td><input type="number" class="form-control" name="quantity[]" value="1" min="1"></td> <td><input type="number" class="form-control" name="price[]" value="0" min="0" step="0.01"></td> <td><button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">Del</button></td> </tr>';
                 $('#orderContent').append(content);
                 $scope.items=null;
+                $scope.itemKey='';
             };
 
 
