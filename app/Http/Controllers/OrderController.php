@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\order;
+use App\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -130,9 +130,11 @@ class OrderController extends Controller
             'id'=>'required',
             'order_id'=>'required'
         ]);
+        dd($request->all());
         DB::beginTransaction();
         $order = Order::find($request->input('order_id'));
         foreach ($request->input('id') as $id){
+//            if()
             $order->items()->updateExistingPivot($id,['status'=>'s']);
         }
         DB::commit();
@@ -147,6 +149,7 @@ class OrderController extends Controller
             'order_id'=>'required',
             'amount'=>'numeric | min:0.5'
         ]);
+
         DB::beginTransaction();
         $order = Order::find($request->input('order_id'));
         $balance = $order->balance - $request->input('amount');

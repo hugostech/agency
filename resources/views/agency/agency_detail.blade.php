@@ -63,11 +63,11 @@
                                             </tr>
                                             @foreach($order->items as $item)
                                                 <tr>
-                                                    <td>{{$item->pivot->item_name}} <font class="text-danger text-muted">({{$item->stock}})</font></td>
-                                                    <td>{{$item->pivot->quantity}}</td>
+                                                    <td>{{$item->pivot->item_name}} <label class="text-muted text-info">|</label> <small>库存：</small> <span class="badge">{{$item->stock}}</span></td>
+                                                    <td>{{$item->pivot->quantity}} (<font class="text-danger">{{$item->pivot->quantity - $item->pivot->shipped_quantity}}</font>)</td>
                                                     <td>¥{{$item->pivot->price}}</td>
                                                     <td>
-                                                        @if($item->pivot->status == 'p')
+                                                        @if($item->pivot->quantity != $item->pivot->shipped_quantity)
                                                             <label class="text-danger">未发货</label>
                                                         @else
                                                             <label class="text-success">已发货</label>

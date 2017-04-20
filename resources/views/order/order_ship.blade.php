@@ -15,16 +15,16 @@
                     {!! Form::input('hidden','order_id',$order->id) !!}
                     <table class="table">
                         <tr>
-                            <th>
+                            <th class="col-md-1">
 
                             </th>
-                            <th>
+                            <th class="col-md-5">
                                 Name
                             </th>
-                            <th>
+                            <th class="col-md-3">
                                 Quantity
                             </th>
-                            <th>
+                            <th class="col-md-3">
                                 Status
                             </th>
 
@@ -32,12 +32,18 @@
                         @foreach($order->items as $item)
                             <tr>
                                 <td class="text-center">
-                                    @if($item->pivot->status == 'p')
-                                    {!! Form::checkbox('id[]',$item->id) !!}
-                                    @endif
+
+                                    {!! Form::input('hidden','id[]',$item->id) !!}
+
                                 </td>
                                 <td>{{$item->make}}{{$item->name}}</td>
-                                <td>{{$item->pivot->quantity}}</td>
+                                <td>
+                                    @if($item->pivot->status == 'p')
+                                        {!! Form::input('number','quantity[]',0,['class'=>'form-control']) !!}
+                                    @else
+                                        {!! Form::input('hidden','quantity[]',0) !!} 0
+                                    @endif
+                                </td>
                                 <td>
                                     @if($item->pivot->status == 'p')
                                         <label class="text-danger">未发货</label>
