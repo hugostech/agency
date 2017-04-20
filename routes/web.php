@@ -23,6 +23,9 @@ Route::resource('items', 'ItemController');
 Route::get('api/items/{search}','ItemController@search');
 
 Route::resource('orders', 'OrderController');
+Route::post('/order2ship','OrderController@order2ship');
+Route::post('/order2pay','OrderController@order2pay');
+
 Route::post('purchase_orders/newpurchase2','PurchaseOrderController@newOrder2');
 Route::get('purchase_orders/review','PurchaseOrderController@purchaseReview');
 Route::resource('purchase_orders', 'PurchaseOrderController');

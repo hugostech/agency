@@ -11,6 +11,8 @@
 
 
                     </div>
+                    {!! Form::open(['url'=>'order2ship']) !!}
+                    {!! Form::input('hidden','order_id',$order->id) !!}
                     <table class="table">
                         <tr>
                             <th>
@@ -22,26 +24,41 @@
                             <th>
                                 Quantity
                             </th>
+                            <th>
+                                Status
+                            </th>
 
                         </tr>
                         @foreach($order->items as $item)
                             <tr>
-                                <td class="text-center">{!! Form::checkbox('id[]',null,['class'=>'form-control']) !!}</td>
+                                <td class="text-center">
+                                    @if($item->pivot->status == 'p')
+                                    {!! Form::checkbox('id[]',$item->id) !!}
+                                    @endif
+                                </td>
                                 <td>{{$item->make}}{{$item->name}}</td>
                                 <td>{{$item->pivot->quantity}}</td>
+                                <td>
+                                    @if($item->pivot->status == 'p')
+                                        <label class="text-danger">未发货</label>
+                                    @else
+                                        <label class="text-success">已发货</label>
+                                    @endif
 
+                                </td>
                             </tr>
 
                         @endforeach
                         <tr>
+
                             <td colspan="4" class="text-right">
-                                <a href="{{url('orders',[$order->id])}}" class="btn btn-info">Ship</a>
-                                <button type="button" class="btn btn-danger">Del</button>
+                                {!! form::submit('Ship',['class'=>'btn btn-primary']) !!}
+                                <a href="{{url('/agencys',[$order->agency->id])}}" class="btn btn-danger">Back</a>
                             </td>
                         </tr>
                     </table>
 
-                    {{--{!! Form::close() !!}--}}
+                    {!! Form::close() !!}
                 </div>
 
             </div>

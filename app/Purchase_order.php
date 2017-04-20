@@ -12,6 +12,6 @@ class Purchase_order extends Model
     );
     public function items(){
         return $this->belongsToMany('App\Item','purchase_order_items','purchase_order_id','item_id')
-            ->withPivot(['quantity','price','status']);
+            ->withPivot(['quantity','price','status','item_name']);
     }
 }

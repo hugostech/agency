@@ -22,7 +22,30 @@
                                 @foreach($orders as $order)
 
                                     <div class="jumbotron">
-                                        <label>Date: {{$order->created_at}} | Total: <font class="text-danger">¥{{$order->total}}</font></label>
+                                        <label>Date: {{$order->created_at}} | Total: <font class="text-muted">¥{{$order->total}}</font>
+                                        |
+                                            @if($order->balance == 0)
+                                            <font class="text-success">已付款</font>
+                                            @else
+                                            <font class="text-danger">Balance: ¥{{$order->balance}} </font>
+
+                                                {!! Form::open(['url'=>'order2pay','id'=>'orderForm'.$order->id]) !!}
+                                            <div class="row">
+                                                <div class="col-sm-3">
+                                                    <div class="input-group input-group-sm">
+                                                        {!! Form::input('hidden','order_id',$order->id) !!}
+                                                        {!! Form::input('number','amount',null,['class'=>'form-control','step'=>'0.01','max'=>$order->balance]) !!}
+                                                        <span class="input-group-btn">
+                                                            <button type="button" class="btn btn-primary" onclick="payOrder({{$order->id}})">Pay</button>
+                                                            {{--{!! Form::submit('Pay',['class'=>'btn btn-info']) !!}--}}
+
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                {!! Form::close() !!}
+                                            @endif
+                                        </label>
                                         <table class="table">
                                             <tr>
                                                 <th>
@@ -40,10 +63,17 @@
                                             </tr>
                                             @foreach($order->items as $item)
                                                 <tr>
-                                                    <td>{{$item->make}}{{$item->name}} <font class="text-danger text-muted">({{$item->stock}})</font></td>
+                                                    <td>{{$item->pivot->item_name}} <font class="text-danger text-muted">({{$item->stock}})</font></td>
                                                     <td>{{$item->pivot->quantity}}</td>
                                                     <td>¥{{$item->pivot->price}}</td>
-                                                    <td> {{$item->pivot->status}}</td>
+                                                    <td>
+                                                        @if($item->pivot->status == 'p')
+                                                            <label class="text-danger">未发货</label>
+                                                        @else
+                                                            <label class="text-success">已发货</label>
+                                                        @endif
+
+                                                    </td>
                                                 </tr>
 
                                             @endforeach
@@ -139,6 +169,11 @@
         </div>
     </div>
     <script>
+        function payOrder(id){
+            if(confirm('确认付款？')){
+                $("#orderForm"+id).submit();
+            }
+        }
         var app = angular.module('orderApp', []);
         app.controller('itemController', function($scope, $http) {
             $scope.items = null;
@@ -156,6 +191,7 @@
             $scope.add2list = function (key,name){
                     var content = '<tr><td><input type="hidden" name="id[]" value="'+key+'">'+name+'</td>';
                     content = content+'<td><input type="number" class="form-control" name="quantity[]" value="1" min="1"></td> <td><input type="number" class="form-control" name="price[]" value="0" min="0" step="0.01"></td> <td><button type="button" class="btn btn-danger btn-sm" onclick="removeItem(this)">Del</button></td> </tr>';
+                    content = content + '<input type="hidden" name="item_name[]" value="'+name+'">';
                     $('#orderContent').append(content);
                 $scope.items=null;
             };
