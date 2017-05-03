@@ -8,7 +8,7 @@ class Item extends Model
 {
     protected $table='items';
     protected $fillable = array(
-        'make','name','user_id'
+        'make','name','user_id','price'
     );
     public function orders(){
         return $this->belongsToMany('App\Order','order_items','item_id','order_id');

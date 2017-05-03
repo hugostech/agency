@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Item;
+use bb\iherb;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+
 class HomeController extends Controller
 {
+    use iherb;
     /**
      * Create a new controller instance.
      *
@@ -25,9 +28,11 @@ class HomeController extends Controller
      */
     public function index()
     {
+//        $this->importBrand();
         $items = Item::all();
         $backorder = array();
         foreach ($items as $item){
+
             $quantity = DB::table('order_items')->select(DB::raw('SUM(quantity) as quantity'))->where('status','p')->where('item_id',$item->id)->get();
             $num = $quantity->pluck('quantity')->all()[0];
             if($num>0){

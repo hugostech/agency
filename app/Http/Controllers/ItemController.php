@@ -17,15 +17,17 @@ class ItemController extends Controller
      */
     public function index()
     {
+        $s = null;
 
 
         if(Input::has('s')){
-            $search = '%'.Input::get('s').'%';
-            $items = Item::where('wechat','like',$search)->where('user_id',Auth::user()->id)->paginate(15);
+            $s = trim(Input::get('s'));
+            $search = '%'.$s.'%';
+            $items = Item::where('make','like',$search)->orWhere('name','like',$search)->where('user_id',Auth::user()->id)->paginate(15);
         }else{
             $items = Item::where('user_id',Auth::user()->id)->paginate(15);
         }
-        return view('item.item',compact('items'));
+        return view('item.item',compact('items','s'));
     }
 
     /**
@@ -87,11 +89,13 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
+//        dd($request->all());
         $this->validate($request,[
             'make'=>'required',
-            'name'=>'required | unique:items'
+            'name'=>'required'
         ]);
         DB::beginTransaction();
+
         $item->update($request->all());
         DB::commit();
         return redirect()->back();
