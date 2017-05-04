@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
  */
 trait iherb{
     public function importBrand(){
+//        dd('s');
         Iherb_brand::chunk(100, function($brands){
            foreach ($brands as $brand){
                $products = $brand->products;
@@ -30,6 +31,7 @@ trait iherb{
                }
            }
         });
+        return redirect('items');
 
     }
     public function test(){

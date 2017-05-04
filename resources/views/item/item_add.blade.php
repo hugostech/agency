@@ -24,10 +24,15 @@
                                 {!! Form::label('name','Name') !!}
                                 {!! Form::text('name',null,['class'=>'form-control']) !!}
                             </div>
+                            <div class="form-group">
+                                {!! Form::label('price','Price') !!}
+                                {!! Form::number('price',null,['class'=>'form-control','step'=>'0.01']) !!}
+                            </div>
                             <div class="form-group text-right">
                                 <a class="btn btn-default" href="{{url('items')}}"><span class="glyphicon glyphicon-remove"></span></a>
                                 {!! Form::submit('Insert',['class'=>'btn btn-success']) !!}
                             </div>
+
 
 
                         </div>

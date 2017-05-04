@@ -23,9 +23,13 @@ class ItemController extends Controller
         if(Input::has('s')){
             $s = trim(Input::get('s'));
             $search = '%'.$s.'%';
-            $items = Item::where('make','like',$search)->orWhere('name','like',$search)->where('user_id',Auth::user()->id)->paginate(15);
+            $items = Item::where('make','like',$search)
+                        ->orWhere('name','like',$search)
+                        ->where('user_id',Auth::user()->id)
+//                        ->where('status','y')
+                        ->paginate(15);
         }else{
-            $items = Item::where('user_id',Auth::user()->id)->paginate(15);
+            $items = Item::where('user_id',Auth::user()->id)->where('status','y')->paginate(15);
         }
         return view('item.item',compact('items','s'));
     }
@@ -110,7 +114,10 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        //
+
+        $item->status = $item->status == 'n'? 'y' : 'n';
+        $item->save();
+        return redirect('items');
     }
 
     /**
